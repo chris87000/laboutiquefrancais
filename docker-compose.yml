@@ -1,0 +1,18 @@
+services:
+    www:
+        build: docker
+        container_name: symfony7-laboutiquefrancais
+        ports:
+            - "7777:80"
+        volumes:
+            - ./docker/vhosts:/etc/apache2/sites-enabled
+            - ./:/var/www/html
+        networks:
+            - symfony7-laboutiquefrancais
+            - mysql_network
+networks:
+    symfony7-laboutiquefrancais:
+
+    mysql_network:
+        external: true
+        name: mysql_default
