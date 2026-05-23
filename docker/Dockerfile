@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     zip \
+    tar \
+    wget \
     locales \
     libicu-dev \
     libzip-dev \
@@ -15,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     nodejs \
     npm
+RUN  apt-get install -y iputils-ping
 
 # Apache rewrite
 RUN a2enmod rewrite
@@ -41,6 +44,13 @@ RUN docker-php-ext-install \
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --version=2.5.8 \
     && mv composer.phar /usr/local/bin/composer
+
+
+RUN wget https://github.com/symfony-cli/symfony-cli/releases/download/v5.17.1/symfony-cli_linux_amd64.tar.gz
+RUN tar -xzf symfony-cli_linux_amd64.tar.gz
+RUN  mv symfony /usr/local/bin/symfony
+RUN  rm symfony-cli_linux_amd64.tar.gz
+
 # Yarn
 RUN npm install -g yarn
 
