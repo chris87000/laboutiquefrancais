@@ -86,5 +86,14 @@
 }
 
 .bg-light-blue{
-    background-color: #f4f7ff;
+    background-color: #dbe1f0;
+    border-bottom: 3px solid white;
 }
+.bg-light-blue a{
+    color: #323539;
+}
+.bg-light-blue a:hover{
+    color: forestgreen;
+    font-weight:bold;
+}
+
