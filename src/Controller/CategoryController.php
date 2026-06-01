@@ -14,6 +14,9 @@ final class CategoryController extends AbstractController
     {
         $category = $categoryRepository->findOneBy(['slug' => $slug]);
 
+        if(!$category){
+           return $this->redirectToRoute('app_home');
+        }
         return $this->render('category/index.html.twig', [
             'category' => $category,
         ]);
