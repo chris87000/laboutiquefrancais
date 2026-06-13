@@ -8,11 +8,15 @@ class Cart{
     public function __construct(private RequestStack $requestStack){
 
     }
+    /*
+     * add()
+     * function permettant l'ajout d'un produit au panier
+     */
     public function add($product): void
     {
         // appel symfony session
         //$session = $this->requestStack->getSession();
-        $cart = $this->requestStack->getSession()->get('cart');
+        $cart = $this->getCart();
 
         if(isset($cart[$product->getId()])) {
             $cart[$product->getId()] = [
@@ -29,9 +33,13 @@ class Cart{
         //dd($this->requestStack->getSession()->get('cart'));
     }
 
+    /*
+     * decrease()
+     * permet la suppression d'un produit au panier
+     */
     public function decrease($id): void
     {
-        $cart = $this->requestStack->getSession()->get('cart');
+        $cart = $this->getCart();
 
         if($cart[$id]['qty'] > 1){
             $cart[$id]['qty'] =  $cart[$id]['qty']  -1;
@@ -42,17 +50,29 @@ class Cart{
         $this->requestStack->getSession()->set('cart', $cart);
     }
 
+    /*
+     * getCart()
+     * renvoie le panier en session
+     */
     public function getCart(){
         return $this->requestStack->getSession()->get('cart');
     }
 
+    /*
+     * remove()
+     * supprime l'ensemble du panier en session
+     */
     public function remove(){
         return $this->requestStack->getSession()->remove('cart');
     }
 
+    /*
+     * fullQuantity()
+     * permet l'affichage un nombre de produits du panier
+     */
     public function fullQuantity(){
         $quantity = 0;
-        $cart = $this->requestStack->getSession()->get('cart');
+        $cart = $this->getCart();
         if(!isset($cart)){
             return $quantity;
         }
@@ -63,10 +83,15 @@ class Cart{
         return $quantity;
     }
 
+    /*
+     * getTotalWt()
+     * retourne le prix total du panier T.T.C
+     *
+     */
     public function getTotalWt(): int
     {
         $price = 0;
-        $cart = $this->requestStack->getSession()->get('cart');
+        $cart = $this->getCart();
         if(!isset($cart)){
             return $price;
         }
