@@ -97,3 +97,17 @@
     font-weight:bold;
 }
 
+#order_adresses .form-check {
+    background-color: #e0e8f9;
+    padding: 10px 40px;
+}
+
+#order_carriers .form-check {
+    background-color: #e0e8f9;
+    padding: 10px 40px;
+}
+
+.small-container{
+    max-width: 800px;
+    margin: 0 auto;
+}
