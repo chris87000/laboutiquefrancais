@@ -6,6 +6,7 @@ use App\Classe\Cart;
 use App\Entity\Order;
 use App\Entity\OrderDetail;
 use App\Form\OrderType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,13 +45,13 @@ final class OrderController extends AbstractController
      *  préparation du paiement vers Stripe
      */
     #[Route('/commande/recapitulatif', name: 'app_order_summary')]
-    public function add(Request $request, Cart $cart): Response
+    public function add(Request $request, Cart $cart, EntityManagerInterface $entityManager): Response
     {
 
         if ($request->getMethod() != 'POST') {
             return $this->redirectToRoute('app_cart');
         }
-        $cart = $cart->getCart();
+        $products = $cart->getCart();
 
         $form = $this->createForm(OrderType::class, null, [
             'adresses' =>$this->getUser()->getAddresses() ,
@@ -72,13 +73,14 @@ final class OrderController extends AbstractController
 
             //stocker les infos en base
             $order = new Order();
+            $order->setUser($this->getUser());
             $order->setCreatedAt(new \DateTime());
             $order->setState(1);
             $order->setCarrierName($form->get('carriers')->getData()->getName());
             $order->setCarrierPrice($form->get('carriers')->getData()->getPrice());
             $order->setDelivery($address);
 
-            foreach ($cart  as $product) {
+            foreach ($products  as $product) {
                   $orderDetail = new OrderDetail();
                   $orderDetail->setProductName($product['object']->getName());
                   $orderDetail->setProductIllustration($product['object']->getIllustration());
@@ -87,14 +89,15 @@ final class OrderController extends AbstractController
                   $orderDetail->setProductTva($product['object']->getTva());
                   $order->addOrderDetail($orderDetail);
             }
-
+            $entityManager->persist($order);
+            $entityManager->flush();
 
 
 
         }
         return $this->render('order/summary.html.twig', [
             'choices' => $form->getData(),
-            'cart' => $cart,
+            'cart' => $products,
             'totalWt' => $cart->getTotalWt(),
         ]);
     }
