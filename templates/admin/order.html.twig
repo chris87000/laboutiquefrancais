@@ -1,0 +1,19 @@
+{# templates/admin/my_dashboard.html.twig #}
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block main %}
+    <h3>Commande n°{{ order.id }}</h3>
+    <span>Passée le {{ order.createdAt | date('d/m/Y') }}</span>
+
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Adresse de livraison</strong><br/>
+            {{ order.delivery|raw }}
+        </div>
+        <div class="col-md-6">
+            {{ order.carrierName }}
+        </div>
+
+    </div>
+    {{  dump(order) }}
+{% endblock main %}

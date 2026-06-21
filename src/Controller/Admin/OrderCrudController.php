@@ -3,9 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Order;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
@@ -13,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use http\Env\Response;
 
 class OrderCrudController extends AbstractCrudController
 {
@@ -35,21 +38,34 @@ class OrderCrudController extends AbstractCrudController
      */
     public function configureActions(Actions $actions): Actions
     {
+        $show = Action::new('Afficher')->linkToCrudAction('show');
         return $actions
+            ->add(Crud::PAGE_INDEX, $show)
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_INDEX, Action::DELETE);
 
     }
 
+    #[AdminRoute('/order')]
+    public function show(AdminContext $context): \Symfony\Component\HttpFoundation\Response
+    {
+        $order = $context->getEntity()->getInstance();
+        //dd($order);
+        return $this->render('admin/order.html.twig', [
+            'order'=>$order,
+        ]);
+    }
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
             DateField::new('createdAt')->setLabel('Date'),
-            NumberField::new('state')->setLabel('Statut'),
+            NumberField::new('state')->setLabel('Statut')->setTemplatePath( 'admin/states.html.twig'),
             AssociationField::new('user')->setLabel('Utilisateur'),
            TextField::new('carrierName')->setLabel('Transporteur'),
+            NumberField::new('totalTva')->setLabel('Total TVA'),
+            NumberField::new('totalWt')->setLabel('Total TTC'),
         ];
     }
 

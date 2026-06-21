@@ -70,7 +70,7 @@ class Cart{
      * fullQuantity()
      * permet l'affichage un nombre de produits du panier
      */
-    public function fullQuantity(){
+    public function fullQuantity(): int{
         $quantity = 0;
         $cart = $this->getCart();
         if(!isset($cart)){
@@ -88,7 +88,7 @@ class Cart{
      * retourne le prix total du panier T.T.C
      *
      */
-    public function getTotalWt(): int
+    public function getTotalWt(): float
     {
         $price = 0;
         $cart = $this->getCart();
