@@ -38,6 +38,7 @@
                 </ul>
                 <div class="speed-menu">
                     {% if app.user %}
+                        <a href="{{ path('app_admin') }}" class="text-decoration-none"><i data-feather="award"></i>Admin</a>
                         <a href="{{ path('app_account') }}" class="text-decoration-none"><i data-feather="user"></i>{{ app.user.firstname }}</a>
                      {% else %}
                          <a href="{{ path('app_login') }}"><i data-feather="user"></i></a>
